@@ -19,7 +19,6 @@ Airplane.prototype.land = function () {
   this.isFlying = false;
 };
 
-
 /*
 // 👇 COMPLETE YOUR WORK BELOW 👇
 // 👇 COMPLETE YOUR WORK BELOW 👇
@@ -39,15 +38,53 @@ Airplane.prototype.land = function () {
         + It should return a string with `name` and `age`. Example: "Mary, 50"
 */
 
-function Person() {
-
+function Person(name, age) {
+  this.name = name;
+  this.age = age;
+  this.stomach = [];
 }
+
+Person.prototype.eat = function (edible) {
+  if (this.stomach.length < 10) {
+    this.stomach.push(edible);
+  }
+};
+
+// give the person the ability to poop
+
+Person.prototype.poop = function () {
+  this.stomach = [];
+};
+
+// toString
+
+Person.prototype.toString = function () {
+  return `${this.name}, ${this.age}`;
+};
+
+const personOne = new Person("William", 21);
+const personTwo = new Person("Grady", 33);
+const personThree = new Person("Cheree", 41);
+
+console.log(personOne.toString());
+console.log(personTwo.toString());
+console.log(personThree.toString());
+
+personTwo.eat("pineapple");
+personTwo.eat("snails");
+personTwo.eat("club sandwich");
+
+console.log(personTwo.stomach);
+
+personTwo.poop();
+
+console.log(personTwo.stomach);
 
 /*
   TASK 2
     - Write a Car constructor that initializes `model` and `milesPerGallon` from arguments.
     - All instances built with Car:
-        + should initialize with an `tank` at 0
+        + should initialize with a `tank` at 0
         + should initialize with an `odometer` at 0
     - Give cars the ability to get fueled with a `.fill(gallons)` method. Add the gallons to `tank`.
     - STRETCH: Give cars ability to `.drive(distance)`. The distance driven:
@@ -57,9 +94,40 @@ function Person() {
         + The `drive` method should return a string "I ran out of fuel at x miles!" x being `odometer`.
 */
 
-function Car() {
+console.log("### Task 2 ###");
 
+function Car(model, milesPerGallon) {
+  this.model = model;
+  this.milesPerGallon = milesPerGallon;
+  this.tank = 0;
+  this.odometer = 0;
 }
+
+Car.prototype.fill = function (gallons) {
+  this.tank += gallons;
+};
+
+Car.prototype.drive = function (distance) {
+  let driveableDistance = this.tank * this.milesPerGallon;
+  if (driveableDistance <= distance) {
+    this.odometer += driveableDistance;
+    this.tank -= driveableDistance / this.milesPerGallon;
+    return (`I ran out of fuel at ${this.odometer} miles!`);
+  } else {
+    this.odometer += distance;
+    this.tank -= distance / this.milesPerGallon;
+  }
+};
+
+const bumbleBee = new Car("Chevy Comaro", 31);
+
+bumbleBee.fill(20);
+
+bumbleBee.drive(300);
+
+console.log(bumbleBee);
+
+console.log(bumbleBee.drive(5000));
 
 /*
   TASK 3
@@ -68,28 +136,51 @@ function Car() {
     - Besides the methods on Person.prototype, babies have the ability to `.play()`:
         + Should return a string "Playing with x", x being the favorite toy.
 */
-function Baby() {
 
+function Baby(name, age, favoriteToy) {
+  Person.call(this, name, age);
+  this.favoriteToy = favoriteToy;
 }
+
+Baby.prototype = Object.create(Person.prototype);
+
+Baby.prototype.play = function () {
+  return `${this.name} is playing with their ${this.favoriteToy}`;
+};
+
+const baby1 = new Baby("Tom", 0.2, "blanket");
+
+console.log(baby1.play());
 
 /* 
   TASK 4
 
   In your own words explain the four principles for the "this" keyword below:
-  1. 
-  2. 
-  3. 
-  4. 
+
+  1. global binding is when you use the "this" keyword in the global scope. In such a case it represents the window object. 
+
+  2. Implicit binding is when an object uses a method, or calls a function. This will point to the object, or whatever it is to the left of the dot 
+
+  3. new binding occurs when we use a constructor function. Inside the constructor function "this" will refer to the instance of the object that you used the constructor function to make.
+
+  4. When we use the call or apply method, "this" becomes explicitely binded to the constructor onjects through inheritence.
 */
 
-
 ///////// END OF CHALLENGE /////////
 ///////// END OF CHALLENGE /////////
 ///////// END OF CHALLENGE /////////
-if (typeof exports !== 'undefined') {
-  module.exports = module.exports || {}
-  if (Airplane) { module.exports.Airplane = Airplane }
-  if (Person) { module.exports.Person = Person }
-  if (Car) { module.exports.Car = Car }
-  if (Baby) { module.exports.Baby = Baby }
+if (typeof exports !== "undefined") {
+  module.exports = module.exports || {};
+  if (Airplane) {
+    module.exports.Airplane = Airplane;
+  }
+  if (Person) {
+    module.exports.Person = Person;
+  }
+  if (Car) {
+    module.exports.Car = Car;
+  }
+  if (Baby) {
+    module.exports.Baby = Baby;
+  }
 }
